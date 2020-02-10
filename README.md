@@ -191,3 +191,8 @@ $ ldd ./smos-server-gen/.stack-work/dist/x86_64-linux-nix/Cabal-2.4.0.1/build/sm
 	libc.so.6 => /nix/store/6yaj6n8l925xxfbcd65gzqx3dz7idrnn-glibc-2.27/lib/libc.so.6 (0x00007f157ea62000)
 	/nix/store/6yaj6n8l925xxfbcd65gzqx3dz7idrnn-glibc-2.27/lib/ld-linux-x86-64.so.2 => /nix/store/y9zg6ryffgc5c9y67fcmfdkyyiivjzpj-glibc-2.27/lib64/ld-linux-x86-64.so.2 (0x00007f157eea8000)
 ```
+
+
+## LTS upgrade
+
+Upgrading to lts-14.25 gets rid of the segfault, but it's the same ghc version!
