@@ -1,0 +1,81 @@
+resolver: lts-14.7
+packages: 
+- .
+extra-deps:
+
+- typed-uuid-0.0.0.0@sha256:623b8c37206aa7da887db0e17f590789fd3d602d7a70742b7486fa038981ef90,1272
+- genvalidity-typed-uuid-0.0.0.0@sha256:3f3e43d3a2876c977aca262a57c2bc9a6f7411d9a071677ebb8ac01504e99acb,1703
+
+
+- github: NorfairKing/persistent
+  commit: 0e3bbb1bd2f5f6383f9eb0407a2416e8b12255ee
+  subdirs:
+    - persistent
+    - persistent-template
+    - persistent-sqlite
+
+- github: NorfairKing/mergeful
+  commit: f1c780066a6279cf5b4a4531df0a5ee4eab78c6a
+  subdirs:
+    - mergeful
+    - genvalidity-mergeful
+- github: NorfairKing/pretty-relative-time
+  commit: 8662d4c999d27e6723aa4f4013ecf08b9f92b697
+- github: NorfairKing/cursor-fuzzy-time
+  commit: 0b1d393a64b0fd357a9ead86c1ef0d6bd2a4c19f
+  subdirs:
+    - cursor-fuzzy-time
+    - cursor-fuzzy-time-gen
+- github: NorfairKing/fuzzy-time
+  commit: 0c32a1d2e09f1b7421918a845f0b57eceb6752a8
+  subdirs:
+    - fuzzy-time
+    - fuzzy-time-gen
+- github: NorfairKing/cursor-brick
+  commit: 178d50eac204cdae3d3aeb92c673b18f6245a4cb
+  subdirs:
+    - cursor-brick
+- github: NorfairKing/cursor
+  commit: b88cb6f79574fd084f86c322f8e644e10d4cc94e
+  subdirs:
+    - cursor
+    - cursor-gen
+- github: NorfairKing/validity
+  commit: be40c0a0b0bf6a1d58f4a6a5c6770c4a544c4450
+  subdirs:
+  - genvalidity
+  - genvalidity-aeson
+  - genvalidity-bytestring
+  - genvalidity-containers
+  - genvalidity-criterion
+  - genvalidity-hspec
+  - genvalidity-hspec-aeson
+  - genvalidity-hspec-binary
+  - genvalidity-hspec-cereal
+  - genvalidity-hspec-hashable
+  - genvalidity-hspec-optics
+  - genvalidity-path
+  - genvalidity-property
+  - genvalidity-scientific
+  - genvalidity-text
+  - genvalidity-time
+  - genvalidity-unordered-containers
+  - genvalidity-uuid
+  - genvalidity-vector
+  - validity
+  - validity-aeson
+  - validity-bytestring
+  - validity-containers
+  - validity-path
+  - validity-primitive
+  - validity-scientific
+  - validity-text
+  - validity-time
+  - validity-unordered-containers
+  - validity-uuid
+  - validity-vector
+nix:
+  path: [ "nixpkgs=https://github.com/NixOS/nixpkgs/archive/e6b93257b0ba070bd12810eeacbe281396c24316.tar.gz" ]
+  add-gc-roots: true
+  packages:
+  - zlib
