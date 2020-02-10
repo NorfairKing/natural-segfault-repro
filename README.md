@@ -43,6 +43,7 @@ stack ghci smos-server-gen --no-load --package genvalidity --package genvalidity
 
 This works:
 
+```
 import Test.QuickCheck
 import Data.GenValidity
 import Numeric.Natural
@@ -53,11 +54,14 @@ import Data.Mergeful.Timed
 import Data.GenValidity.Mergeful
 sample (genUnchecked :: Gen ServerTime)
 sample (genValid :: Gen ServerTime)
+```
 
 This doesn't:
 
-> sample (genUnchecked :: Gen (Timed Int))
+```
+sample (genUnchecked :: Gen (Timed Int))
 Timed {timedValue = -8382519431551690709, timedTime = ServerTime {unServerTime = /tmp/nix-shell-15284-0/rc: line 1: 16043 Segmentation fault      (core dumped) '/nix/store/7xvxx52qrqgksycj88f5fq6hcifq92c8-stack-2.1.3.1/bin/stack' $STACK_IN_NIX_EXTRA_ARGS '--internal-re-exec-version=2.1.3.1' 'ghci' 'smos-server-gen' '--no-load' '--package' 'genvalidity' '--package' 'genvalidity-mergefu
+```
 
 The same happens with `genValid :: Gen (Timed Int)`.
 
