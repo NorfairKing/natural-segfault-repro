@@ -15,7 +15,7 @@ Upgrades to mergeful: f1c780066a6279cf5b4a4531df0a5ee4eab78c6a
 
 ## Current ploblem
 
-On 31665c6 in the smos repo:
+On Nixos, on 31665c6 in the smos repo:
 
 stack test :smos-server-test segfaults:
 
@@ -43,15 +43,16 @@ stack ghci smos-server-gen --no-load --package genvalidity --package genvalidity
 
 This works:
 
-> import Test.QuickCheck
-> import Numeric.Natural
-> import Data.Mergeful.Timed
-> sample (genUnchecked :: Gen Natural)
-> sample (genValid :: Gen Natural)
-> import Data.Mergeful.Timed
-> import Data.GenValidity.Mergeful
-> sample (genUnchecked :: Gen ServerTime)
-> sample (genValid :: Gen ServerTime)
+import Test.QuickCheck
+import Data.GenValidity
+import Numeric.Natural
+import Data.Mergeful.Timed
+sample (genUnchecked :: Gen Natural)
+sample (genValid :: Gen Natural)
+import Data.Mergeful.Timed
+import Data.GenValidity.Mergeful
+sample (genUnchecked :: Gen ServerTime)
+sample (genValid :: Gen ServerTime)
 
 This doesn't:
 
@@ -150,3 +151,43 @@ genInteger = sized $ \s -> oneof $
 ### Minimal repro
 
 I'm trying to make a minimal reproducible example of what goes wrong, but the problem does not occur in this repository.
+Neither as an executable nor as a test suite.
+
+
+### Dynamically linked libgmp version
+
+I already checked, the dynamically linked libgmp libraries are the same when building with stack vs nix.
+
+```
+$ nix-build --keep-failed default.nix -A smos-server-gen
+
+$ ldd /tmp/nix-build-smos-server-gen-0.0.0.0.drv-1/source/dist/build/smos-server-test/smos-server-test
+	linux-vdso.so.1 (0x00007ffdd9df2000)
+	libm.so.6 => /nix/store/6yaj6n8l925xxfbcd65gzqx3dz7idrnn-glibc-2.27/lib/libm.so.6 (0x00007fc6fd6ce000)
+	libpthread.so.0 => /nix/store/6yaj6n8l925xxfbcd65gzqx3dz7idrnn-glibc-2.27/lib/libpthread.so.0 (0x00007fc6fd6ad000)
+	libsqlite3.so.0 => /nix/store/isg5d6rh4zdva16hxs7qg6k1s96v39mx-sqlite-3.28.0/lib/libsqlite3.so.0 (0x00007fc6fd595000)
+	libz.so.1 => /nix/store/62ar9xmrlcnlgmwgfi77xz6bq1180vhi-zlib-1.2.11/lib/libz.so.1 (0x00007fc6fd576000)
+	librt.so.1 => /nix/store/6yaj6n8l925xxfbcd65gzqx3dz7idrnn-glibc-2.27/lib/librt.so.1 (0x00007fc6fd56a000)
+	libutil.so.1 => /nix/store/6yaj6n8l925xxfbcd65gzqx3dz7idrnn-glibc-2.27/lib/libutil.so.1 (0x00007fc6fd565000)
+	libdl.so.2 => /nix/store/6yaj6n8l925xxfbcd65gzqx3dz7idrnn-glibc-2.27/lib/libdl.so.2 (0x00007fc6fd560000)
+	libgmp.so.10 => /nix/store/j2p1qjbajqfb95ba3dqgjbsknipknikk-gmp-6.1.2/lib/libgmp.so.10 (0x00007fc6fd4ca000)
+	libffi.so.6 => /nix/store/z39757pg1gp5lgkxcn0yv6nv4lgmpnad-libffi-3.2.1/lib/libffi.so.6 (0x00007fc6fd4be000)
+	libc.so.6 => /nix/store/6yaj6n8l925xxfbcd65gzqx3dz7idrnn-glibc-2.27/lib/libc.so.6 (0x00007fc6fd308000)
+	/nix/store/6yaj6n8l925xxfbcd65gzqx3dz7idrnn-glibc-2.27/lib/ld-linux-x86-64.so.2 => /nix/store/y9zg6ryffgc5c9y67fcmfdkyyiivjzpj-glibc-2.27/lib64/ld-linux-x86-64.so.2 (0x00007fc6fd866000)
+```
+
+
+```
+$ ldd ./smos-server-gen/.stack-work/dist/x86_64-linux-nix/Cabal-2.4.0.1/build/smos-server-test/smos-server-test
+	linux-vdso.so.1 (0x00007ffc967e4000)
+	libm.so.6 => /nix/store/6yaj6n8l925xxfbcd65gzqx3dz7idrnn-glibc-2.27/lib/libm.so.6 (0x00007f157ed10000)
+	libpthread.so.0 => /nix/store/6yaj6n8l925xxfbcd65gzqx3dz7idrnn-glibc-2.27/lib/libpthread.so.0 (0x00007f157ecef000)
+	libz.so.1 => /nix/store/62ar9xmrlcnlgmwgfi77xz6bq1180vhi-zlib-1.2.11/lib/libz.so.1 (0x00007f157ecd0000)
+	librt.so.1 => /nix/store/6yaj6n8l925xxfbcd65gzqx3dz7idrnn-glibc-2.27/lib/librt.so.1 (0x00007f157ecc6000)
+	libutil.so.1 => /nix/store/6yaj6n8l925xxfbcd65gzqx3dz7idrnn-glibc-2.27/lib/libutil.so.1 (0x00007f157ecc1000)
+	libdl.so.2 => /nix/store/6yaj6n8l925xxfbcd65gzqx3dz7idrnn-glibc-2.27/lib/libdl.so.2 (0x00007f157ecba000)
+	libgmp.so.10 => /nix/store/j2p1qjbajqfb95ba3dqgjbsknipknikk-gmp-6.1.2/lib/libgmp.so.10 (0x00007f157ec24000)
+	libffi.so.6 => /nix/store/z39757pg1gp5lgkxcn0yv6nv4lgmpnad-libffi-3.2.1/lib/libffi.so.6 (0x00007f157ec18000)
+	libc.so.6 => /nix/store/6yaj6n8l925xxfbcd65gzqx3dz7idrnn-glibc-2.27/lib/libc.so.6 (0x00007f157ea62000)
+	/nix/store/6yaj6n8l925xxfbcd65gzqx3dz7idrnn-glibc-2.27/lib/ld-linux-x86-64.so.2 => /nix/store/y9zg6ryffgc5c9y67fcmfdkyyiivjzpj-glibc-2.27/lib64/ld-linux-x86-64.so.2 (0x00007f157eea8000)
+```
