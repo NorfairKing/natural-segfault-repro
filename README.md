@@ -15,7 +15,7 @@ Upgrades to mergeful: f1c780066a6279cf5b4a4531df0a5ee4eab78c6a
 
 ## Current ploblem
 
-On Nixos, on 31665c6 in the smos repo:
+On Nixos, on `31665c6` in the smos repo: (https://github.com/NorfairKing/smos)
 
 stack test :smos-server-test segfaults:
 
